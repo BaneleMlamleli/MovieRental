@@ -24,6 +24,7 @@ public class MovieRental extends javax.swing.JFrame {
     ReadFile rf = new ReadFile();
     Database db = new Database();
     public boolean canUserRent = true;
+    int custN = 0, dvdN = 0;
     /**
      * Creates new form MovieRental
      */
@@ -34,19 +35,19 @@ public class MovieRental extends javax.swing.JFrame {
          * 2. Insert/Populate the tables with data stored in arraylists
          */
         ServerApp.listen();
-        rf.readCustomerSerializedData();//reading Customer.ser and saving data in an arraylist
-        rf.readDvdSerializedData();     //reading Movies.ser and saving data in an arraylist
-        rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
+//        rf.readCustomerSerializedData();//reading Customer.ser and saving data in an arraylist
+//        rf.readDvdSerializedData();     //reading Movies.ser and saving data in an arraylist
+//        rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
         Database.Connect();             //Establishing a datanase connection using UCanAccess driver
         //Database.dropTables();          //Dropping the tables if they are created already
-        Database.createTables(connect); //Creating the database tables
-        db.insertCustomerData();        //Inserting data from arraylist into the Customer table
-        db.insertDvdData();             //Inserting data from arraylist into the DVD table
-        db.insertRentalData();          //Inserting data from arraylist into the Rental table
+//        Database.createTables(connect); //Creating the database tables
+//        db.insertCustomerData();        //Inserting data from arraylist into the Customer table
+//        db.insertDvdData();             //Inserting data from arraylist into the DVD table
+//        db.insertRentalData();          //Inserting data from arraylist into the Rental table
         
-        db.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
-        db.selectAllMovies();     //Selecting all data in the DVD table and storing data in an arraylist
-        db.selectAllRental();     //Selecting all data in the Rental table storing data in an arraylist
+//        db.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
+//        db.selectAllMovies();     //Selecting all data in the DVD table and storing data in an arraylist
+//        db.selectAllRental();     //Selecting all data in the Rental table storing data in an arraylist
         
         //ClientApp.communicate();
     }
@@ -1075,7 +1076,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addComponent(cmbAvailableForRental, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(29, 29, 29)
                     .addComponent(btnAddDvd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(27, Short.MAX_VALUE)))
+                    .addContainerGap(26, Short.MAX_VALUE)))
         );
 
         pnlBottom.add(pnlAddNewDvd, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 200, 800, 400));
@@ -1516,35 +1517,33 @@ public class MovieRental extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtReturnCustomerAvailableBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReturnDvdLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlReturnDvdLayout.createSequentialGroup()
-                                .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlReturnDvdLayout.createSequentialGroup()
-                                        .addComponent(jLabel55)
-                                        .addGap(519, 519, 519))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReturnDvdLayout.createSequentialGroup()
-                                        .addComponent(jSeparator22, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(366, 366, 366)))
-                                .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(pnlReturnDvdLayout.createSequentialGroup()
-                                        .addComponent(jLabel59)
-                                        .addGap(120, 120, 120))
-                                    .addGroup(pnlReturnDvdLayout.createSequentialGroup()
-                                        .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jSeparator23, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(jSeparator27, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(pnlReturnDvdLayout.createSequentialGroup()
-                                                    .addComponent(jLabel60)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(txtReturnFee, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGap(21, 21, 21))))
-                            .addComponent(jLabel57)
-                            .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jSeparator25, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                                .addComponent(txtRentedReturnDate, javax.swing.GroupLayout.Alignment.LEADING)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                            .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                    .addComponent(jLabel55)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                    .addComponent(jSeparator22)
+                                    .addGap(366, 366, 366)))
+                            .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                    .addComponent(jLabel59)
+                                    .addGap(120, 120, 120))
+                                .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                    .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jSeparator23, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jSeparator27, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                                .addComponent(jLabel60)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(txtReturnFee, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGap(21, 21, 21))))
+                        .addComponent(jLabel57)
+                        .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jSeparator25, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(txtRentedReturnDate, javax.swing.GroupLayout.Alignment.LEADING))))
                 .addContainerGap())
             .addGroup(pnlReturnDvdLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
@@ -1596,7 +1595,7 @@ public class MovieRental extends javax.swing.JFrame {
                                     .addComponent(jLabel56))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlReturnDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlReturnDvdLayout.createSequentialGroup()
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReturnDvdLayout.createSequentialGroup()
                                         .addComponent(txtRentedMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(1, 1, 1)
                                         .addComponent(jSeparator22, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1622,7 +1621,7 @@ public class MovieRental extends javax.swing.JFrame {
                         .addComponent(txtRentedReturnDate, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)
                         .addComponent(jSeparator25, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(btnReturnMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1949,7 +1948,7 @@ public class MovieRental extends javax.swing.JFrame {
                             .addComponent(jSeparator16)
                             .addComponent(txtTotalPenaltyCost, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(79, 79, 79)
-                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 175, Short.MAX_VALUE)
+                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 184, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel27)
                         .addGap(11, 11, 11)
@@ -2052,7 +2051,7 @@ public class MovieRental extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane9)
-                    .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
+                    .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -2061,7 +2060,7 @@ public class MovieRental extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2119,7 +2118,7 @@ public class MovieRental extends javax.swing.JFrame {
                         .addComponent(jLabel37)
                         .addGap(18, 18, 18)
                         .addComponent(cmbDailyRental, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -2130,7 +2129,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addComponent(cmbDailyRental, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel37))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2452,11 +2451,10 @@ public class MovieRental extends javax.swing.JFrame {
         pnlSearch.setVisible(false);
         
         db.selectAllCustomers();
-        cmbSelectCustomer.removeAllItems(); //removing all items in the combobox to prevent duplicate
-        cmbChooseMovieCategory.removeAllItems(); //removing all items in the combobox to prevent duplicate
+//        cmbSelectCustomer.removeAllItems(); //removing all items in the combobox to prevent duplicate
+//        cmbChooseMovieCategory.removeAllItems(); //removing all items in the combobox to prevent duplicate
         for(int a = 0;a < Database.arrayListSelectAllCustomers.size(); a++){
-            String custNum = Integer.toString(Database.arrayListSelectAllCustomers.get(a).getCustNumber());
-            cmbSelectCustomer.addItem(custNum);
+            cmbSelectCustomer.addItem(Integer.toString(Database.arrayListSelectAllCustomers.get(a).getCustNumber()));
         }
 
         //displaying all the categories in the category combobox
@@ -2488,10 +2486,9 @@ public class MovieRental extends javax.swing.JFrame {
         pnlSearch.setVisible(false);
         
         db.selectAllRental();
-        cmbSelectRentalNumber.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        //cmbSelectRentalNumber.removeAllItems(); //removing all items in the combobox to prevent duplicate
         for(int a = 0;a < Database.arrayListSelectAllRentals.size(); a++){
-            String rentNum = Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber());
-            cmbSelectRentalNumber.addItem(rentNum);
+            cmbSelectRentalNumber.addItem(Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber()));
         }
         
     }//GEN-LAST:event_btnReturnDvdMouseClicked
@@ -2628,6 +2625,7 @@ public class MovieRental extends javax.swing.JFrame {
         //The below code will clear the table everytime new information is displayed
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
+        tblDisplayAllRental.revalidate();
         db.selectAllRental();
         double totPenaltyCost = 0.0;
         double totPenaltyCostPerDay = 0.0;
@@ -2678,7 +2676,7 @@ public class MovieRental extends javax.swing.JFrame {
             String dtReturned = Database.arrayListSelectAllRentals.get(a).getDateReturned();
             String custNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getCustNumber());
             String dvdNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getDvdNumber());
-            if(cmbDailyRental.getSelectedItem().toString() == dtRented){
+            if(cmbDailyRental.getSelectedItem().toString().equalsIgnoreCase(dtRented)){
                 model.addRow(new Object[]{rentalNm, dtRented, dtReturned, custNm, dvdNm});
             }            
         }
@@ -2706,8 +2704,8 @@ public class MovieRental extends javax.swing.JFrame {
             }
         }
         
-        if(noSearch > 0){
-            JOptionPane.showConfirmDialog(rootPane, "Sorry the movie with the searched phrase does not exist",
+        if(noSearch == 0){
+            JOptionPane.showMessageDialog(rootPane, "Sorry the movie with the searched phrase does not exist",
                     "Search not found", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoadAllRental3ActionPerformed
@@ -2740,7 +2738,7 @@ public class MovieRental extends javax.swing.JFrame {
             String credit = Double.toString(Database.arrayListSelectAllCustomers.get(a).getCredit());
             String canRent = Boolean.toString(Database.arrayListSelectAllCustomers.get(a).canRent());
             
-            model.addRow(new Object[]{name, surname, surname, customerNumber, phoneNumber, credit, canRent});
+            model.addRow(new Object[]{name, surname, customerNumber, phoneNumber, credit, canRent});
         }        
     }//GEN-LAST:event_btnLoadAllCustomersActionPerformed
 
@@ -2750,6 +2748,7 @@ public class MovieRental extends javax.swing.JFrame {
         //The below code will clear the table everytime new information is displayed
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
+        tblDisplayAllMovies.revalidate();
         db.selectAllMovies();
         Collections.sort(Database.arrayListSelectAllMovies);
         for(int a = 0; a < Database.arrayListSelectAllMovies.size();a++) {
@@ -2975,6 +2974,37 @@ public class MovieRental extends javax.swing.JFrame {
 
     private void cmbSelectRentalNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSelectRentalNumberActionPerformed
         // Display customer details based on rental number
+        int rentalNum = Integer.parseInt(cmbSelectRentalNumber.getSelectedItem().toString());
+       db.selectAllCustomers();
+       db.selectAllRental();
+       db.selectAllMovies();       
+       for(int a =0; a < Database.arrayListSelectAllRentals.size();a++){
+           if(Database.arrayListSelectAllRentals.get(a).getRentalNumber() == rentalNum){
+               txtRentedReturnDate.setText(Database.arrayListSelectAllRentals.get(a).getDateRented());
+               txtReturnDate.setText(Database.arrayListSelectAllRentals.get(a).getDateReturned());
+               custN = Database.arrayListSelectAllRentals.get(a).getCustNumber();
+               dvdN = Database.arrayListSelectAllRentals.get(a).getDvdNumber();
+               break;
+           }
+       }
+       
+       for(int aa =0; aa < Database.arrayListSelectAllCustomers.size();aa++){
+           if(Database.arrayListSelectAllCustomers.get(aa).getCustNumber() == custN){
+               txtReturnCustomerName.setText(Database.arrayListSelectAllCustomers.get(aa).getName());
+               txtReturnCustomerSurname.setText(Database.arrayListSelectAllCustomers.get(aa).getSurname());
+               txtReturnCustomerAvailableBalance.setText(Double.toString(Database.arrayListSelectAllCustomers.get(aa).getCredit()));
+               break;
+           }
+       }
+       
+       for(int b =0; b < Database.arrayListSelectAllMovies.size();b++){
+           if(Database.arrayListSelectAllMovies.get(b).getDvdNumber() == dvdN){
+               txtRentedMovie.setText(Database.arrayListSelectAllMovies.get(b).getTitle());
+               txtRentedMovieCategory.setText(Database.arrayListSelectAllMovies.get(b).getCategory());
+               txtReturnFee.setText(Double.toString(Database.arrayListSelectAllMovies.get(b).getPrice()));
+               break;
+           }
+       }
 
     }//GEN-LAST:event_cmbSelectRentalNumberActionPerformed
 
@@ -3029,8 +3059,22 @@ public class MovieRental extends javax.swing.JFrame {
                 pnlReport.setVisible(false);
                 pnlSearch.setVisible(false);
                 pnlUpdateCustomerCredit.setVisible(true);
+                
+                for (int a = 0; a < Database.arrayListSelectAllCustomers.size(); a++) {
+                    if (Database.arrayListSelectAllCustomers.get(a).getCustNumber() == custN) {
+                        txtUpdateName.setText(Database.arrayListSelectAllCustomers.get(a).getName());
+                        txtUpdateSurname.setText(Database.arrayListSelectAllCustomers.get(a).getSurname());
+                        txtUpdatePhoneNumber.setText(Database.arrayListSelectAllCustomers.get(a).getPhoneNum());
+                        txtUpdateCustomerNumber.setText(Integer.toString(Database.arrayListSelectAllCustomers.get(a).getCustNumber()));
+                        break;
+                    }
+                }
+                db.returnMovieAndUpdateCustomerTable(custN);
+                db.returnMovieAndUpdateDvdTable(dvdN);
                 break;
-            case 1: JOptionPane.showMessageDialog(rootPane, "Good Bye!","Thank you",JOptionPane.INFORMATION_MESSAGE);break;
+            case 1: db.returnMovieAndUpdateCustomerTable(custN);
+                    db.returnMovieAndUpdateDvdTable(dvdN);
+                    JOptionPane.showMessageDialog(rootPane, "Good Bye!","Thank you",JOptionPane.INFORMATION_MESSAGE);break;
         }
     }//GEN-LAST:event_btnReturnMovieActionPerformed
 
@@ -3066,7 +3110,17 @@ public class MovieRental extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUpdatePhoneNumberActionPerformed
 
     private void btnUpdateCustomerCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateCustomerCreditActionPerformed
-        // TODO add your handling code here:
+        // update customer credit
+        db.selectAllCustomers();
+        
+        double updateCredit = Double.parseDouble(txtUpdateCredit.getText());
+        for(int a = 0; a < Database.arrayListSelectAllCustomers.size(); a++){
+            if(Database.arrayListSelectAllCustomers.get(a).getCustNumber() == custN){                
+                db.updateCustomerCredit(Database.arrayListSelectAllCustomers.get(a).getCustNumber(), updateCredit);
+                break;
+            }
+        }
+        
     }//GEN-LAST:event_btnUpdateCustomerCreditActionPerformed
 
     private void txtUpdateCustomerNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUpdateCustomerNumberActionPerformed
@@ -3084,7 +3138,7 @@ public class MovieRental extends javax.swing.JFrame {
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         // Daily rentals for a particular data
         db.selectAllRental();
-        cmbDailyRental.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        //cmbDailyRental.removeAllItems(); //removing all items in the combobox to prevent duplicate
         for(int a = 0;a < Database.arrayListSelectAllRentals.size(); a++){
             cmbDailyRental.addItem(Database.arrayListSelectAllRentals.get(a).getDateRented());
         }

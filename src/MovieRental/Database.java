@@ -168,6 +168,7 @@ public class Database {
     
     //Selecting all the data about customer from the CUSTOMER table
     public void selectAllCustomers(){
+        System.out.println("Reading all data from Customers table");
         try {
             stmnt = connect.createStatement();
             ResultSet allCustomers = stmnt.executeQuery("SELECT * FROM CUSTOMER");
@@ -183,6 +184,7 @@ public class Database {
     
     //Selecting all the data about the movies from the DVD table
     public void selectAllMovies() {
+        System.out.println("Reading all data from Movies/DVD table");
         try {
             stmnt = connect.createStatement();
             ResultSet allMovies = stmnt.executeQuery("SELECT * FROM DVD");
@@ -208,6 +210,7 @@ public class Database {
 
     //Selecting all the data about rentals from the RENTAL table
     public void selectAllRental() {
+        System.out.println("Reading all data from Rental table");
         try {
             stmnt = connect.createStatement();
             ResultSet allRentals = stmnt.executeQuery("SELECT * FROM RENTAL");
@@ -261,12 +264,11 @@ public class Database {
     
     public void rentMovieAndUpdateCustomerTable(int customerNm){
         try {
-            String updateDetails = "UPDATE CUSTOMER SET Can_Rent = ? WHERE custNumber = ?";
+            String updateDetails = "UPDATE CUSTOMER SET Can_Rent = ? WHERE custNumber = "+customerNm;
                 prepStmnt = connect.prepareStatement(updateDetails);
-                prepStmnt.setInt(1, customerNm);
-                prepStmnt.setString(5, "false");
+                prepStmnt.setString(6, "false");
                 prepStmnt.executeUpdate();
-            System.out.println("Rental data has updated successfully");
+            System.out.println("customer rental status has updated successfully");
         } catch (HeadlessException | SQLException error) {
             JOptionPane.showMessageDialog(null, "Unable to update customer data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -274,9 +276,8 @@ public class Database {
     
     public void rentMovieAndUpdateDvdTable(int rentedDvdNm){
         try {
-            String updateDetails = "UPDATE DVD SET Available_For_Rental = ? WHERE dvdNumber = ?";
+            String updateDetails = "UPDATE DVD SET Available_For_Rental = ? WHERE dvdNumber = "+rentedDvdNm;
             prepStmnt = connect.prepareStatement(updateDetails);
-            prepStmnt.setInt(1, rentedDvdNm);
             prepStmnt.setString(6, "false");
             prepStmnt.executeUpdate();
             System.out.println("Dvd table has updated successfully");
@@ -299,6 +300,42 @@ public class Database {
             System.out.println("Rental data has been recorded successfully");
         } catch (HeadlessException | SQLException error) {
             JOptionPane.showMessageDialog(null, "Unable to insert rental details in the Rental table\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void returnMovieAndUpdateCustomerTable(int customerNm){
+        try {
+            String updateDetails = "UPDATE CUSTOMER SET Can_Rent = ? WHERE custNumber = "+customerNm;
+                prepStmnt = connect.prepareStatement(updateDetails);
+                prepStmnt.setString(1, "true"); //6
+                prepStmnt.executeUpdate();
+            System.out.println("customer rental status has updated successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to update customer data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void returnMovieAndUpdateDvdTable(int rentedDvdNm){
+        try {
+            String updateDetails = "UPDATE DVD SET Available_For_Rental = ? WHERE dvdNumber = "+rentedDvdNm;
+            prepStmnt = connect.prepareStatement(updateDetails);
+            prepStmnt.setString(1, "true"); //6
+            prepStmnt.executeUpdate();
+            System.out.println("Dvd rental stutus has been updated successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to update DVD data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void updateCustomerCredit(int custNum, double credt){
+        try {
+            String updateDetails = "UPDATE CUSTOMER SET credit = ? WHERE custNumber = "+custNum;
+            prepStmnt = connect.prepareStatement(updateDetails);
+            prepStmnt.setDouble(1, credt); //5
+            prepStmnt.executeUpdate();
+            System.out.println("Credit has been updated successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to update customer credit\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
