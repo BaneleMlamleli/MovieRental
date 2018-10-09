@@ -38,7 +38,7 @@ public class MovieRental extends javax.swing.JFrame {
         rf.readDvdSerializedData();     //reading Movies.ser and saving data in an arraylist
         rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
         Database.Connect();             //Establishing a datanase connection using UCanAccess driver
-        Database.dropTables();          //Dropping the tables if they are created already
+        //Database.dropTables();          //Dropping the tables if they are created already
         Database.createTables(connect); //Creating the database tables
         db.insertCustomerData();        //Inserting data from arraylist into the Customer table
         db.insertDvdData();             //Inserting data from arraylist into the DVD table
@@ -48,7 +48,7 @@ public class MovieRental extends javax.swing.JFrame {
         db.selectAllMovies();     //Selecting all data in the DVD table and storing data in an arraylist
         db.selectAllRental();     //Selecting all data in the Rental table storing data in an arraylist
         
-        ClientApp.communicate();
+        //ClientApp.communicate();
     }
     
     /*This method will set/change the backgroup color
