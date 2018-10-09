@@ -32,7 +32,7 @@ public class ReadFile{
     //read data into array lists
     public void readCustomerSerializedData(){
         try{
-            fileInputStreamCustomer = new FileInputStream("F:\\MovieRental\\src\\Assets\\Customers.ser");
+            fileInputStreamCustomer = new FileInputStream("/home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental/src/Assets/Customers.ser");
             objectInputStreamCustomer = new ObjectInputStream(fileInputStreamCustomer);
             //reading data from Customer.ser file
             while(true){
@@ -55,7 +55,7 @@ public class ReadFile{
     //read data into Dvd array lists
     public void readDvdSerializedData(){
         try{
-            fileInputStreamMovies = new FileInputStream("F:\\MovieRental\\src\\Assets\\Movies.ser");
+            fileInputStreamMovies = new FileInputStream("/home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental/src/Assets/Movies.ser");
             objectInputStreamMovies = new ObjectInputStream(fileInputStreamMovies);
             
             //reading data from Movies.ser file
@@ -78,7 +78,7 @@ public class ReadFile{
     //read data into array lists
     public void readRentalSerializedData(){
         try{
-            fileInputStreamRental = new FileInputStream("F:\\MovieRental\\src\\Assets\\rental.ser");
+            fileInputStreamRental = new FileInputStream("/home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental/src/Assets/rental.ser");
             objectInputStreamRental = new ObjectInputStream(fileInputStreamRental);
             //reading data from Rental.ser file
             while(true){

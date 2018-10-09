@@ -1,3 +1,4 @@
+package MovieRental;
 /*
  * ClientApp.java
  *
@@ -14,7 +15,7 @@ import java.net.*;
  */
 public class ClientApp
 {    
-    private Socket server;
+    public static Socket server;
     
     /** Creates a new instance of ClientApp */
     public ClientApp()
@@ -31,7 +32,7 @@ public class ClientApp
         }
     }
     
-    public void communicate()
+    public static void communicate()
     {
         // The connection has been established - now send/receive.
         
@@ -43,10 +44,10 @@ public class ClientApp
             ObjectInputStream in = new ObjectInputStream(server.getInputStream());
             
             // Step 2: communicate
-            out.writeObject("Christoff");
+            out.writeObject("Request received. Now processing database insertion");
             out.flush();
             String response = (String)in.readObject();
-            System.out.println("From SERVER>> " + response);
+            System.out.println("Server response >>> " + response);
             
             // Step 3: close down
             out.close();
@@ -63,9 +64,9 @@ public class ClientApp
         }
     }
       
-    public static void main(String[] args)
-    {
-        ClientApp client = new ClientApp();
-        client.communicate();
-    }    
+//    public static void main(String[] args)
+//    {
+//        ClientApp client = new ClientApp();
+//        client.communicate();
+//    }    
 }

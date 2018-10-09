@@ -5,12 +5,14 @@
  */
 package MovieRental;
 
-import static MovieRental.Database.connect;
 import java.awt.Color;
+import java.util.Calendar;
+import java.util.Collections;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -20,6 +22,7 @@ public class MovieRental extends javax.swing.JFrame {
 
     ReadFile rf = new ReadFile();
     Database db = new Database();
+    public boolean canUserRent = true;
     /**
      * Creates new form MovieRental
      */
@@ -29,19 +32,22 @@ public class MovieRental extends javax.swing.JFrame {
          * 1. Read serialized files and store data in arraylist
          * 2. Insert/Populate the tables with data stored in arraylists
          */
-//        rf.readCustomerSerializedData();//reading Customer.ser and saving data in an arraylist
-//        rf.readDvdSerializedData();     //reading Movies.ser and saving data in an arraylist
-//        rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
+        ServerApp.listen();
+        rf.readCustomerSerializedData();//reading Customer.ser and saving data in an arraylist
+        rf.readDvdSerializedData();     //reading Movies.ser and saving data in an arraylist
+        rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
         Database.Connect();             //Establishing a datanase connection using UCanAccess driver
-//        Database.dropTables();          //Dropping the tables if they are created already
-//        Database.createTables(connect); //Creating the database tables
-//        Database.insertCustomerData();  //Inserting data from arraylist into the Customer table
-//        Database.insertDvdData();       //Inserting data from arraylist into the DVD table
-//        Database.insertRentalData();    //Inserting data from arraylist into the Rental table
+        Database.dropTables();          //Dropping the tables if they are created already
+        Database.createTables(); //Creating the database tables
+        db.insertCustomerData();        //Inserting data from arraylist into the Customer table
+        db.insertDvdData();             //Inserting data from arraylist into the DVD table
+        db.insertRentalData();          //Inserting data from arraylist into the Rental table
         
-        Database.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
-        Database.selectAllMovies();     //Selecting all data in the DVD table and storing data in an arraylist
-        Database.selectAllRental();     //Selecting all data in the Rental table storing data in an arraylist
+        db.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
+        db.selectAllMovies();     //Selecting all data in the DVD table and storing data in an arraylist
+        db.selectAllRental();     //Selecting all data in the Rental table storing data in an arraylist
+        
+        ClientApp.communicate();
     }
     
     /*This method will set/change the backgroup color
@@ -205,7 +211,7 @@ public class MovieRental extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         tblDisplaySearchedMovies = new javax.swing.JTable();
         btnLoadAllRental3 = new javax.swing.JButton();
-        txtName1 = new javax.swing.JTextField();
+        txtSearchMovie = new javax.swing.JTextField();
         jSeparator15 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         pnlReport = new javax.swing.JPanel();
@@ -215,24 +221,23 @@ public class MovieRental extends javax.swing.JFrame {
         btnLoadAllRental = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tblDisplayAllRental = new javax.swing.JTable();
-        txtName2 = new javax.swing.JTextField();
+        txtTotalPenaltyCost = new javax.swing.JTextField();
         jSeparator16 = new javax.swing.JSeparator();
         jLabel23 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        txtName3 = new javax.swing.JTextField();
+        txtTotalPenaltyCostPerDay = new javax.swing.JTextField();
         jSeparator17 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         btnLoadAllRental1 = new javax.swing.JButton();
         jScrollPane9 = new javax.swing.JScrollPane();
-        tblDisplayAllRental1 = new javax.swing.JTable();
+        tblDisplayAllOutstandingRentals = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        btnLoadAllRental2 = new javax.swing.JButton();
         jLabel37 = new javax.swing.JLabel();
         cmbDailyRental = new javax.swing.JComboBox<>();
         jScrollPane10 = new javax.swing.JScrollPane();
-        tblDisplayAllRental2 = new javax.swing.JTable();
+        tblDisplayAllDailyRentals = new javax.swing.JTable();
         pnlUpdateCustomerCredit = new javax.swing.JPanel();
         jSeparator33 = new javax.swing.JSeparator();
         txtUpdateCredit = new javax.swing.JTextField();
@@ -902,6 +907,7 @@ public class MovieRental extends javax.swing.JFrame {
         txtPriceAddition.setBackground(new java.awt.Color(204, 255, 255));
         txtPriceAddition.setFont(new java.awt.Font("Cooper Black", 0, 16)); // NOI18N
         txtPriceAddition.setForeground(new java.awt.Color(46, 110, 254));
+        txtPriceAddition.setText("0.00");
         txtPriceAddition.setBorder(null);
         txtPriceAddition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1068,7 +1074,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addComponent(cmbAvailableForRental, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(29, 29, 29)
                     .addComponent(btnAddDvd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(26, Short.MAX_VALUE)))
+                    .addContainerGap(27, Short.MAX_VALUE)))
         );
 
         pnlBottom.add(pnlAddNewDvd, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 200, 800, 400));
@@ -1149,7 +1155,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel44)
                         .addGap(38, 38, 38)
-                        .addComponent(cmbSelectCustomer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmbSelectCustomer, 0, 387, Short.MAX_VALUE)
                         .addGap(229, 229, 229))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1225,14 +1231,14 @@ public class MovieRental extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Title", "Category", "New release", "Price", "Available"
+                "Title", "Category", "New release", "Price", "Available", "Dvd number"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1253,7 +1259,7 @@ public class MovieRental extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
+                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel50)
                         .addGap(38, 38, 38)
@@ -1268,7 +1274,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addComponent(jLabel50)
                     .addComponent(cmbChooseMovieCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1295,9 +1301,9 @@ public class MovieRental extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(pnlRentDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlRentDvdLayout.createSequentialGroup()
-                    .addGap(686, 686, 686)
-                    .addComponent(btnRent, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRentDvdLayout.createSequentialGroup()
+                    .addContainerGap(706, Short.MAX_VALUE)
+                    .addComponent(btnRent, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
         );
         pnlRentDvdLayout.setVerticalGroup(
@@ -1309,7 +1315,7 @@ public class MovieRental extends javax.swing.JFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(pnlRentDvdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlRentDvdLayout.createSequentialGroup()
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRentDvdLayout.createSequentialGroup()
                     .addGap(153, 153, 153)
                     .addComponent(btnRent, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                     .addContainerGap()))
@@ -1790,13 +1796,13 @@ public class MovieRental extends javax.swing.JFrame {
             }
         });
 
-        txtName1.setBackground(new java.awt.Color(204, 255, 255));
-        txtName1.setFont(new java.awt.Font("Cooper Black", 0, 14)); // NOI18N
-        txtName1.setForeground(new java.awt.Color(46, 110, 254));
-        txtName1.setBorder(null);
-        txtName1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchMovie.setBackground(new java.awt.Color(204, 255, 255));
+        txtSearchMovie.setFont(new java.awt.Font("Cooper Black", 0, 14)); // NOI18N
+        txtSearchMovie.setForeground(new java.awt.Color(46, 110, 254));
+        txtSearchMovie.setBorder(null);
+        txtSearchMovie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtName1ActionPerformed(evt);
+                txtSearchMovieActionPerformed(evt);
             }
         });
 
@@ -1816,7 +1822,7 @@ public class MovieRental extends javax.swing.JFrame {
                             .addGroup(pnlSearchLayout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtSearchMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLoadAllRental3, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1830,7 +1836,7 @@ public class MovieRental extends javax.swing.JFrame {
                     .addComponent(btnLoadAllRental3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtName1)))
+                        .addComponent(txtSearchMovie)))
                 .addGap(1, 1, 1)
                 .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1844,6 +1850,11 @@ public class MovieRental extends javax.swing.JFrame {
 
         jTabbedPane1.setBackground(new java.awt.Color(204, 255, 255));
         jTabbedPane1.setForeground(new java.awt.Color(51, 51, 51));
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
 
         jPanel4.setBackground(new java.awt.Color(204, 255, 255));
 
@@ -1883,14 +1894,14 @@ public class MovieRental extends javax.swing.JFrame {
         tblDisplayAllRental.setSelectionBackground(new java.awt.Color(46, 110, 254));
         jScrollPane8.setViewportView(tblDisplayAllRental);
 
-        txtName2.setEditable(false);
-        txtName2.setBackground(new java.awt.Color(204, 255, 255));
-        txtName2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtName2.setForeground(new java.awt.Color(46, 110, 254));
-        txtName2.setBorder(null);
-        txtName2.addActionListener(new java.awt.event.ActionListener() {
+        txtTotalPenaltyCost.setEditable(false);
+        txtTotalPenaltyCost.setBackground(new java.awt.Color(204, 255, 255));
+        txtTotalPenaltyCost.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtTotalPenaltyCost.setForeground(new java.awt.Color(46, 110, 254));
+        txtTotalPenaltyCost.setBorder(null);
+        txtTotalPenaltyCost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtName2ActionPerformed(evt);
+                txtTotalPenaltyCostActionPerformed(evt);
             }
         });
 
@@ -1910,14 +1921,14 @@ public class MovieRental extends javax.swing.JFrame {
         jLabel27.setForeground(new java.awt.Color(0, 102, 102));
         jLabel27.setText("R");
 
-        txtName3.setEditable(false);
-        txtName3.setBackground(new java.awt.Color(204, 255, 255));
-        txtName3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtName3.setForeground(new java.awt.Color(46, 110, 254));
-        txtName3.setBorder(null);
-        txtName3.addActionListener(new java.awt.event.ActionListener() {
+        txtTotalPenaltyCostPerDay.setEditable(false);
+        txtTotalPenaltyCostPerDay.setBackground(new java.awt.Color(204, 255, 255));
+        txtTotalPenaltyCostPerDay.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtTotalPenaltyCostPerDay.setForeground(new java.awt.Color(46, 110, 254));
+        txtTotalPenaltyCostPerDay.setBorder(null);
+        txtTotalPenaltyCostPerDay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtName3ActionPerformed(evt);
+                txtTotalPenaltyCostPerDayActionPerformed(evt);
             }
         });
 
@@ -1935,15 +1946,15 @@ public class MovieRental extends javax.swing.JFrame {
                         .addGap(11, 11, 11)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSeparator16)
-                            .addComponent(txtName2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtTotalPenaltyCost, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(79, 79, 79)
-                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 173, Short.MAX_VALUE)
+                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 175, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel27)
                         .addGap(11, 11, 11)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSeparator17)
-                            .addComponent(txtName3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTotalPenaltyCostPerDay, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btnLoadAllRental, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1961,14 +1972,14 @@ public class MovieRental extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtName2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTotalPenaltyCost, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel23)
                             .addComponent(jLabel25))
                         .addGap(1, 1, 1)
                         .addComponent(jSeparator16, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtName3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTotalPenaltyCostPerDay, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel27)
                             .addComponent(jLabel26))
                         .addGap(1, 1, 1)
@@ -2005,8 +2016,8 @@ public class MovieRental extends javax.swing.JFrame {
             }
         });
 
-        tblDisplayAllRental1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDisplayAllRental1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDisplayAllOutstandingRentals.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblDisplayAllOutstandingRentals.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -2029,8 +2040,8 @@ public class MovieRental extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDisplayAllRental1.setSelectionBackground(new java.awt.Color(46, 110, 254));
-        jScrollPane9.setViewportView(tblDisplayAllRental1);
+        tblDisplayAllOutstandingRentals.setSelectionBackground(new java.awt.Color(46, 110, 254));
+        jScrollPane9.setViewportView(tblDisplayAllOutstandingRentals);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -2040,7 +2051,7 @@ public class MovieRental extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane9)
-                    .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE))
+                    .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -2049,22 +2060,13 @@ public class MovieRental extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnLoadAllRental1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Outstanding rental", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(204, 255, 255));
-
-        btnLoadAllRental2.setFont(new java.awt.Font("Cooper Black", 0, 24)); // NOI18N
-        btnLoadAllRental2.setForeground(new java.awt.Color(0, 102, 102));
-        btnLoadAllRental2.setText("Load daily rentals");
-        btnLoadAllRental2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoadAllRental2ActionPerformed(evt);
-            }
-        });
 
         jLabel37.setFont(new java.awt.Font("Cooper Black", 0, 18)); // NOI18N
         jLabel37.setForeground(new java.awt.Color(0, 102, 102));
@@ -2078,8 +2080,8 @@ public class MovieRental extends javax.swing.JFrame {
             }
         });
 
-        tblDisplayAllRental2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDisplayAllRental2.setModel(new javax.swing.table.DefaultTableModel(
+        tblDisplayAllDailyRentals.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblDisplayAllDailyRentals.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -2102,8 +2104,8 @@ public class MovieRental extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDisplayAllRental2.setSelectionBackground(new java.awt.Color(46, 110, 254));
-        jScrollPane10.setViewportView(tblDisplayAllRental2);
+        tblDisplayAllDailyRentals.setSelectionBackground(new java.awt.Color(46, 110, 254));
+        jScrollPane10.setViewportView(tblDisplayAllDailyRentals);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -2115,23 +2117,19 @@ public class MovieRental extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel37)
                         .addGap(18, 18, 18)
-                        .addComponent(cmbDailyRental, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-                        .addComponent(btnLoadAllRental2))
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE))
+                        .addComponent(cmbDailyRental, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnLoadAllRental2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel37))
-                    .addComponent(cmbDailyRental, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbDailyRental, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel37))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2396,11 +2394,7 @@ public class MovieRental extends javax.swing.JFrame {
         pnlReport.setVisible(false);
         pnlSearch.setVisible(false);
         
-        Database.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
- 
-        for(int a = 0; a < Database.arrayListSelectAllCustomers.size(); a++){
-            System.out.println(Database.arrayListSelectAllCustomers.get(a).getCustNumber());
-        }
+        db.selectAllCustomers();  //Selecting all data in the Customer table storing data in an arraylist
         //adding one to the customer number to create a unique number and displaying it
         String newCustomerNumber = Integer.toString((Database.arrayListSelectAllCustomers.get(Database.arrayListSelectAllCustomers.size()-1).getCustNumber()+1));
         txtCustomerNumber.setText(newCustomerNumber);
@@ -2427,6 +2421,11 @@ public class MovieRental extends javax.swing.JFrame {
         pnlListAllCustomers.setVisible(false);
         pnlReport.setVisible(false);
         pnlSearch.setVisible(false);
+        
+        db.selectAllMovies();  //Selecting all data in the DVD table storing data in an arraylist
+        //adding one to the customer number to create a unique number and displaying it
+        String newMovieNumber = Integer.toString((Database.arrayListSelectAllMovies.get(Database.arrayListSelectAllMovies.size()-1).getDvdNumber()+1));
+        txtDvdNumber.setText(newMovieNumber);
     }//GEN-LAST:event_btnAddNewDvdMouseClicked
 
     private void btnRentDvdMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRentDvdMouseClicked
@@ -2450,6 +2449,19 @@ public class MovieRental extends javax.swing.JFrame {
         pnlListAllCustomers.setVisible(false);
         pnlReport.setVisible(false);
         pnlSearch.setVisible(false);
+        
+        db.selectAllCustomers();
+        cmbSelectCustomer.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        cmbChooseMovieCategory.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        for(int a = 0;a < Database.arrayListSelectAllCustomers.size(); a++){
+            String custNum = Integer.toString(Database.arrayListSelectAllCustomers.get(a).getCustNumber());
+            cmbSelectCustomer.addItem(custNum);
+        }
+
+        //displaying all the categories in the category combobox
+        for(int c = 0;c < Database.arrayListSelectAllMovies.size(); c++){
+            cmbChooseMovieCategory.addItem(Database.arrayListSelectAllMovies.get(c).getCategory());
+        }
     }//GEN-LAST:event_btnRentDvdMouseClicked
 
     private void btnReturnDvdMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnReturnDvdMouseClicked
@@ -2473,6 +2485,14 @@ public class MovieRental extends javax.swing.JFrame {
         pnlListAllCustomers.setVisible(false);
         pnlReport.setVisible(false);
         pnlSearch.setVisible(false);
+        
+        db.selectAllRental();
+        cmbSelectRentalNumber.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        for(int a = 0;a < Database.arrayListSelectAllRentals.size(); a++){
+            String rentNum = Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber());
+            cmbSelectRentalNumber.addItem(rentNum);
+        }
+        
     }//GEN-LAST:event_btnReturnDvdMouseClicked
 
     private void btnListAllMoviesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListAllMoviesMouseClicked
@@ -2585,12 +2605,14 @@ public class MovieRental extends javax.swing.JFrame {
         // Add dvd into the database
         try {
             String title = txtTitle.getText();
-            int category = Integer.parseInt(cmbCategory.getSelectedItem().toString().charAt(0) + "");
+            String category = cmbCategory.getSelectedItem().toString();
             double price = Double.parseDouble(txtPrice.getText()) + Double.parseDouble(txtPriceAddition.getText());
-            boolean newRelease = Boolean.parseBoolean(cmbNewRelease.getSelectedItem().toString());
-            boolean availableForRental = Boolean.parseBoolean(cmbAvailableForRental.getSelectedItem().toString());
+            String newRelease = cmbNewRelease.getSelectedItem().toString();
+            String availableForRental = cmbAvailableForRental.getSelectedItem().toString();
+            int dvdNumber = Integer.parseInt(txtDvdNumber.getText());
 
             if (title.length() != 0) {
+                db.addDvd(dvdNumber, title, category, price, newRelease, availableForRental);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Movie title cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -2601,59 +2623,143 @@ public class MovieRental extends javax.swing.JFrame {
 
     private void btnLoadAllRentalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllRentalActionPerformed
         // Load and display all the movies
-//        Collections.sort(dvd);
-//        txtDisplayAllMovies.setText("");
-//        txtDisplayAllMovies.setText(" Title\t| Category\t| New release\t    | Price\t| Available for rental\n"+
-//                "=====================================================================================\n");
-//        for (int i = 0; i < dvd.size(); i++) {
-//            txtDisplayAllMovies.append(dvd.get(i).toString() + "\n");
-//        }
+        DefaultTableModel model = (DefaultTableModel) tblDisplayAllRental.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllRental();
+        double totPenaltyCost = 0.0;
+        double totPenaltyCostPerDay = 0.0;
+        for (int a = 0; a < Database.arrayListSelectAllRentals.size(); a++) {
+            String rentalNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber());
+            String dtRented = Database.arrayListSelectAllRentals.get(a).getDateRented();
+            String dtReturned = Database.arrayListSelectAllRentals.get(a).getDateReturned();
+            String custNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getCustNumber());
+            String dvdNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getDvdNumber());
+            totPenaltyCost += Database.arrayListSelectAllRentals.get(a).getTotalPenaltyCost();
+            totPenaltyCostPerDay = Database.arrayListSelectAllRentals.get(a).getTotalPenaltyCost();
+            model.addRow(new Object[]{rentalNm, dtRented, dtReturned, custNm, dvdNm});
+        }        
+        txtTotalPenaltyCost.setText(Double.toString(totPenaltyCost));
+        txtTotalPenaltyCostPerDay.setText(Double.toString(totPenaltyCostPerDay));
     }//GEN-LAST:event_btnLoadAllRentalActionPerformed
 
     private void btnLoadAllRental1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllRental1ActionPerformed
-        // TODO add your handling code here:
+        // Outstanding rentals
+        DefaultTableModel model = (DefaultTableModel) tblDisplayAllOutstandingRentals.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllRental();
+        for (int a = 0; a < Database.arrayListSelectAllRentals.size(); a++) {
+            String rentalNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber());
+            String dtRented = Database.arrayListSelectAllRentals.get(a).getDateRented();
+            String dtReturned = Database.arrayListSelectAllRentals.get(a).getDateReturned();
+            String custNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getCustNumber());
+            String dvdNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getDvdNumber());
+            if(dtReturned.equalsIgnoreCase("na")){
+                model.addRow(new Object[]{rentalNm, dtRented, dtReturned, custNm, dvdNm});
+            }
+        } 
     }//GEN-LAST:event_btnLoadAllRental1ActionPerformed
 
-    private void btnLoadAllRental2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllRental2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLoadAllRental2ActionPerformed
-
     private void cmbDailyRentalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDailyRentalActionPerformed
-        // TODO add your handling code here:
+        // Display dates
+        cmbDailyRental.removeAllItems();
+         DefaultTableModel model = (DefaultTableModel) tblDisplayAllDailyRentals.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllRental();
+        for (int a = 0; a < Database.arrayListSelectAllRentals.size(); a++) {
+            String rentalNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getRentalNumber());
+            String dtRented = Database.arrayListSelectAllRentals.get(a).getDateRented();
+            String dtReturned = Database.arrayListSelectAllRentals.get(a).getDateReturned();
+            String custNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getCustNumber());
+            String dvdNm = Integer.toString(Database.arrayListSelectAllRentals.get(a).getDvdNumber());
+            if(cmbDailyRental.getSelectedItem().toString() == dtRented){
+                model.addRow(new Object[]{rentalNm, dtRented, dtReturned, custNm, dvdNm});
+            }            
+        }
     }//GEN-LAST:event_cmbDailyRentalActionPerformed
 
     private void btnLoadAllRental3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllRental3ActionPerformed
-        // TODO add your handling code here:
+        // Search button
+        DefaultTableModel model = (DefaultTableModel) tblDisplaySearchedMovies.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllMovies();
+        Collections.sort(Database.arrayListSelectAllMovies);
+        int noSearch = 0;
+        for (int a = 0; a < Database.arrayListSelectAllMovies.size(); a++) {
+            String title = Database.arrayListSelectAllMovies.get(a).getTitle();
+            String cat = Database.arrayListSelectAllMovies.get(a).getCategory();
+            String newRelease = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isNewRelease());
+            String price = Double.toString(Database.arrayListSelectAllMovies.get(a).getPrice());
+            String available = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isAvailable());
+            //String dvdNum = Integer.toString(Database.arrayListSelectAllMovies.get(a).getDvdNumber());            
+            if(title.contains(txtSearchMovie.getText())){
+                model.addRow(new Object[]{title, cat, newRelease, price, available});
+                noSearch++;
+            }
+        }
+        
+        if(noSearch > 0){
+            JOptionPane.showConfirmDialog(rootPane, "Sorry the movie with the searched phrase does not exist",
+                    "Search not found", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoadAllRental3ActionPerformed
 
-    private void txtName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtName1ActionPerformed
+    private void txtSearchMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchMovieActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtName1ActionPerformed
+    }//GEN-LAST:event_txtSearchMovieActionPerformed
 
-    private void txtName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtName2ActionPerformed
+    private void txtTotalPenaltyCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPenaltyCostActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtName2ActionPerformed
+    }//GEN-LAST:event_txtTotalPenaltyCostActionPerformed
 
-    private void txtName3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtName3ActionPerformed
+    private void txtTotalPenaltyCostPerDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPenaltyCostPerDayActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtName3ActionPerformed
+    }//GEN-LAST:event_txtTotalPenaltyCostPerDayActionPerformed
 
     private void btnLoadAllCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllCustomersActionPerformed
-        // TODO add your handling code here:
+        // List all customers
+        DefaultTableModel model = (DefaultTableModel) tblDisplayAllCustomers.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllCustomers();
+        Collections.sort(Database.arrayListSelectAllCustomers);
+        for(int a = 0; a < Database.arrayListSelectAllCustomers.size();a++){
+            String name = Database.arrayListSelectAllCustomers.get(a).getName();
+            String surname = Database.arrayListSelectAllCustomers.get(a).getSurname();
+            String customerNumber = Integer.toString(Database.arrayListSelectAllCustomers.get(a).getCustNumber());
+            String phoneNumber = Database.arrayListSelectAllCustomers.get(a).getPhoneNum();
+            String credit = Double.toString(Database.arrayListSelectAllCustomers.get(a).getCredit());
+            String canRent = Boolean.toString(Database.arrayListSelectAllCustomers.get(a).canRent());
+            
+            model.addRow(new Object[]{name, surname, surname, customerNumber, phoneNumber, credit, canRent});
+        }        
     }//GEN-LAST:event_btnLoadAllCustomersActionPerformed
 
     private void btnLoadAllMoviesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadAllMoviesActionPerformed
         //Load all movies
-        DefaultTableModel model = (DefaultTableModel)tblDisplayAllMovies.getModel();
-        
-        /* The below code will clear the table everytime the button is clicked again.
-         * This will help to remove displaying the same thing on the table */        
+        DefaultTableModel model = (DefaultTableModel) tblDisplayAllMovies.getModel();
+        //The below code will clear the table everytime new information is displayed
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
-
-        //Populating the table to display all the movies
-//        model.addRow(new Object[]{dvd.get(i).getTitle(), dvd.get(i).getCategory(),
-//            dvd.get(i).isNewRelease(), dvd.get(i).getPrice(), dvd.get(i).isAvailableForRental()});        
+        db.selectAllMovies();
+        Collections.sort(Database.arrayListSelectAllMovies);
+        for(int a = 0; a < Database.arrayListSelectAllMovies.size();a++) {
+                String title = Database.arrayListSelectAllMovies.get(a).getTitle();
+                String cat = Database.arrayListSelectAllMovies.get(a).getCategory();
+                String newRelease = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isNewRelease());
+                String price = Double.toString(Database.arrayListSelectAllMovies.get(a).getPrice());
+                String available = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isAvailable());
+                String dvdNum = Integer.toString(Database.arrayListSelectAllMovies.get(a).getDvdNumber());
+                model.addRow(new Object[]{title, cat, dvdNum, price, newRelease, available});
+            }
     }//GEN-LAST:event_btnLoadAllMoviesActionPerformed
 
     private void txtPhoneNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneNumberActionPerformed
@@ -2692,7 +2798,7 @@ public class MovieRental extends javax.swing.JFrame {
                     try{
                         int phoneNumber = Integer.parseInt(phoneNum);
                         //code to call the method to add new customer into the database
-                        db.addCustomer(customerNumber, name, surname, phoneNum, credit, canRent);
+                        db.addCustomer(customerNumber, name, surname, Integer.toString(phoneNumber), credit, canRent);
                     }catch(NumberFormatException error){
                         JOptionPane.showMessageDialog(rootPane,"Phone number must be precisely 10 digits", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -2719,7 +2825,22 @@ public class MovieRental extends javax.swing.JFrame {
 
     private void cmbSelectCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSelectCustomerActionPerformed
         //Selecting a customer to rent a movie
-        String customer = cmbSelectCustomer.getSelectedItem().toString();
+        db.selectAllCustomers();
+        int customer = Integer.parseInt(cmbSelectCustomer.getSelectedItem().toString());        
+        for(int a = 0; a < Database.arrayListSelectAllCustomers.size();a++){
+            if(Database.arrayListSelectAllCustomers.get(a).getCustNumber() == customer){
+                if(Database.arrayListSelectAllCustomers.get(a).canRent()){
+                    txtCustomerName.setText(Database.arrayListSelectAllCustomers.get(a).getName());
+                    txtCustomerSurname.setText(Database.arrayListSelectAllCustomers.get(a).getSurname());
+                    txtAvailableCredit.setText(Double.toString(Database.arrayListSelectAllCustomers.get(a).getCredit()));
+                    break;
+                }else{
+                    canUserRent = false;
+                    JOptionPane.showMessageDialog(rootPane, "Sorry!\nYou cannot rent any movie.\nYou need to return a movie",
+                            "Unsuccessful rental", JOptionPane.INFORMATION_MESSAGE);break;
+                }
+            }
+        }
     }//GEN-LAST:event_cmbSelectCustomerActionPerformed
 
     private void txtCustomerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerNameActionPerformed
@@ -2735,79 +2856,112 @@ public class MovieRental extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAvailableCreditActionPerformed
 
     private void cmbChooseMovieCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbChooseMovieCategoryActionPerformed
-        // TODO add your handling code here:
+        // Choose movie category
+        String category = cmbChooseMovieCategory.getSelectedItem().toString();
+        DefaultTableModel model = (DefaultTableModel) tblChooseMovieToRent.getModel();
+        //The below code will clear the table everytime new information is displayed
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        db.selectAllMovies();
+        for(int a = 0; a < Database.arrayListSelectAllMovies.size();a++) {             
+            if(Database.arrayListSelectAllMovies.get(a).getCategory().equals(category)){
+                String title = Database.arrayListSelectAllMovies.get(a).getTitle();
+                String cat = Database.arrayListSelectAllMovies.get(a).getCategory();
+                String newRelease = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isNewRelease());
+                String price = Double.toString(Database.arrayListSelectAllMovies.get(a).getPrice());
+                String available = Boolean.toString(Database.arrayListSelectAllMovies.get(a).isAvailable());
+                String dvdNum = Integer.toString(Database.arrayListSelectAllMovies.get(a).getDvdNumber());
+                model.addRow(new Object[]{title, cat, newRelease, price, available, dvdNum});
+            }
+        }
     }//GEN-LAST:event_cmbChooseMovieCategoryActionPerformed
 
     private void btnRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentActionPerformed
         // Renting a movie
+        DefaultTableModel model = (DefaultTableModel)tblChooseMovieToRent.getModel();
+        double rentedMoviePrice = Double.parseDouble(model.getValueAt(tblChooseMovieToRent.getSelectedRow(), 3).toString());
+        int rentedDvdNum = Integer.parseInt(model.getValueAt(tblChooseMovieToRent.getSelectedRow(), 5).toString());
+        double availableCredit = Double.parseDouble(txtAvailableCredit.getText());
         
-//        if(/*successful rental*/){
-//            JOptionPane.showMessageDialog(rootPane, "Name: Xxxxxxxx\n" +
-//                    "Category: Xxxxxxx\n" + "Movie title: Xxxxxx\n" +
-//                    "Cost: Rxxx.xx\n" + "Return date: ", "Successful rent", JOptionPane.INFORMATION_MESSAGE);
-//        }
-//        
-//        if(/*insufficient funds*/){
-//            int value = JOptionPane.showConfirmDialog(rootPane, 
-//                    "SORRY!\nYou have insufficient funds to rent.\n"+
-//                    "Click \"YES\" to load credit/Pay fee\nClick \"NO\" to cancel rental", "Insufficient funds", JOptionPane.YES_NO_OPTION);
-//            switch(value){
-//                case 0: 
-//                    resetColor(btnAddNewCustomer, lblAddNewCustomer);
-//                    resetColor(btnAddNewDvd, lblAddNewDvd);
-//                    resetColor(btnRentDvd, lblRentDvd);
-//                    resetColor(btnReturnDvd, lblReturnDvd);
-//                    resetColor(btnListAllMovies, lblListAllMovies);
-//                    resetColor(btnListAllCustomers, lblListAllCustomers);
-//                    resetColor(btnReport, lblReport);
-//                    resetColor(btnSearch, lblSearch);
-//                    //resetColor(btnUpdateCredit, lblUpdateCredit);
-//
-//                    pnlAddNewCustomer.setVisible(false);
-//                    pnlAddNewDvd.setVisible(false);
-//                    pnlRentDvd.setVisible(false);
-//                    pnlReturnDvd.setVisible(false);
-//                    pnlListAllMovies.setVisible(false);
-//                    pnlListAllCustomers.setVisible(false);
-//                    pnlReport.setVisible(false);
-//                    pnlSearch.setVisible(false);
-//                    pnlUpdateCustomerCredit.setVisible(true);
-//                    break;
-//                case 1: JOptionPane.showMessageDialog(rootPane, "Thank\nYour rental have been cancelled",
-//                        "Cancel rental", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        }
-//        
-//        if(/*Unsuccessful rent*/){
-//            int opt = JOptionPane.showConfirmDialog(rootPane, 
-//                    "SORRY!\nYou cannot rent any movie.\nYou have a pending movie"+
-//                    "Click \"YES\" to return movie\nClick \"NO\" to cancel rental", "Pending movie", JOptionPane.YES_NO_OPTION);
-//            switch(opt){
-//                case 0: 
-//                    resetColor(btnAddNewCustomer, lblAddNewCustomer);
-//                    resetColor(btnAddNewDvd, lblAddNewDvd);
-//                    resetColor(btnRentDvd, lblRentDvd);
-//                    setColor(btnReturnDvd, lblReturnDvd);
-//                    resetColor(btnListAllMovies, lblListAllMovies);
-//                    resetColor(btnListAllCustomers, lblListAllCustomers);
-//                    resetColor(btnReport, lblReport);
-//                    resetColor(btnSearch, lblSearch);
-//                    //resetColor(btnUpdateCredit, lblUpdateCredit);
-//
-//                    pnlAddNewCustomer.setVisible(false);
-//                    pnlAddNewDvd.setVisible(false);
-//                    pnlRentDvd.setVisible(false);
-//                    pnlReturnDvd.setVisible(true);
-//                    pnlListAllMovies.setVisible(false);
-//                    pnlListAllCustomers.setVisible(false);
-//                    pnlReport.setVisible(false);
-//                    pnlSearch.setVisible(false);
-//                    pnlUpdateCustomerCredit.setVisible(false);
-//                    break;
-//                case 1: JOptionPane.showMessageDialog(rootPane, "Thank\nYour rental have been cancelled",
-//                        "Cancel rental", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        }
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendar1 = Calendar.getInstance();
+        String dateRented = calendar.get(Calendar.YEAR)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.DATE);
+        calendar1.add(Calendar.DATE, 1);
+        String dateReturned = calendar1.get(Calendar.YEAR)+"/"+calendar1.get(Calendar.MONTH)+"/"+calendar1.get(Calendar.DATE);
+        
+        db.selectAllRental();
+        int rentalNumber = Database.arrayListSelectAllRentals.get(Database.arrayListSelectAllRentals.size()-1).getRentalNumber();
+        if(canUserRent){
+            //insufficient unds
+            if(availableCredit < rentedMoviePrice) {
+                int value = JOptionPane.showConfirmDialog(rootPane,
+                        "SORRY!\nYou have insufficient funds to rent.\n"
+                        + "Click \"YES\" to load credit/Pay fee\nClick \"NO\" to cancel rental", "Insufficient funds", JOptionPane.YES_NO_OPTION);
+                switch (value) {
+                    case 0:
+                        resetColor(btnAddNewCustomer, lblAddNewCustomer);
+                        resetColor(btnAddNewDvd, lblAddNewDvd);
+                        resetColor(btnRentDvd, lblRentDvd);
+                        resetColor(btnReturnDvd, lblReturnDvd);
+                        resetColor(btnListAllMovies, lblListAllMovies);
+                        resetColor(btnListAllCustomers, lblListAllCustomers);
+                        resetColor(btnReport, lblReport);
+                        resetColor(btnSearch, lblSearch);
+                        //resetColor(btnUpdateCredit, lblUpdateCredit);
+
+                        pnlAddNewCustomer.setVisible(false);
+                        pnlAddNewDvd.setVisible(false);
+                        pnlRentDvd.setVisible(false);
+                        pnlReturnDvd.setVisible(false);
+                        pnlListAllMovies.setVisible(false);
+                        pnlListAllCustomers.setVisible(false);
+                        pnlReport.setVisible(false);
+                        pnlSearch.setVisible(false);
+                        pnlUpdateCustomerCredit.setVisible(true);
+                        break;
+                    case 1:
+                        JOptionPane.showMessageDialog(rootPane, "Thank\nYour rental have been cancelled",
+                                "Cancel rental", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                //sufficient funds and user can rent
+                db.rentMovieAndUpdateCustomerTable(Integer.parseInt(cmbSelectCustomer.getSelectedItem().toString()));
+                db.rentMovieAndUpdateDvdTable(rentedDvdNum);
+                db.insertRentedMovieIntoRentalTable(rentalNumber, dateRented, dateReturned, Integer.parseInt(cmbSelectCustomer.getSelectedItem().toString()), rentedDvdNum, 0.0);
+                JOptionPane.showMessageDialog(rootPane, "Good day "+txtCustomerName.getText()+
+                        "\nRental is successful!! ", "Successful rent", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else{
+            int opt = JOptionPane.showConfirmDialog(rootPane, "Sorry you cannot rent any movie\n"+
+                    "Would you like to return a the movie\n"+
+                    "so that you can be able to rent again?","Error. No rental", JOptionPane.YES_NO_OPTION);
+            switch(opt){
+                case 0:
+                    resetColor(btnAddNewCustomer, lblAddNewCustomer);
+                    resetColor(btnAddNewDvd, lblAddNewDvd);
+                    resetColor(btnRentDvd, lblRentDvd);
+                    setColor(btnReturnDvd, lblReturnDvd);
+                    resetColor(btnListAllMovies, lblListAllMovies);
+                    resetColor(btnListAllCustomers, lblListAllCustomers);
+                    resetColor(btnReport, lblReport);
+                    resetColor(btnSearch, lblSearch);
+                    //resetColor(btnUpdateCredit, lblUpdateCredit);
+
+                    pnlUpdateCustomerCredit.setVisible(false);
+                    pnlAddNewCustomer.setVisible(false);
+                    pnlAddNewDvd.setVisible(false);
+                    pnlRentDvd.setVisible(false);
+                    pnlReturnDvd.setVisible(true);
+                    pnlListAllMovies.setVisible(false);
+                    pnlListAllCustomers.setVisible(false);
+                    pnlReport.setVisible(false);
+                    pnlSearch.setVisible(false);
+                    break;
+                case 1:
+                    JOptionPane.showMessageDialog(rootPane, "Thank you,\nPlease select another customer for rental", "Successful rent", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+            }
+        }
     }//GEN-LAST:event_btnRentActionPerformed
 
     private void txtReturnCustomerSurnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtReturnCustomerSurnameActionPerformed
@@ -2819,7 +2973,8 @@ public class MovieRental extends javax.swing.JFrame {
     }//GEN-LAST:event_txtReturnCustomerNameActionPerformed
 
     private void cmbSelectRentalNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSelectRentalNumberActionPerformed
-        // TODO add your handling code here:
+        // Display customer details based on rental number
+
     }//GEN-LAST:event_cmbSelectRentalNumberActionPerformed
 
     private void txtReturnCustomerAvailableBalanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtReturnCustomerAvailableBalanceActionPerformed
@@ -2925,6 +3080,15 @@ public class MovieRental extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUpdateNameActionPerformed
 
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // Daily rentals for a particular data
+        db.selectAllRental();
+        cmbDailyRental.removeAllItems(); //removing all items in the combobox to prevent duplicate
+        for(int a = 0;a < Database.arrayListSelectAllRentals.size(); a++){
+            cmbDailyRental.addItem(Database.arrayListSelectAllRentals.get(a).getDateRented());
+        }
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -2969,7 +3133,6 @@ public class MovieRental extends javax.swing.JFrame {
     private javax.swing.JButton btnLoadAllMovies;
     private javax.swing.JButton btnLoadAllRental;
     private javax.swing.JButton btnLoadAllRental1;
-    private javax.swing.JButton btnLoadAllRental2;
     private javax.swing.JButton btnLoadAllRental3;
     private javax.swing.JButton btnRent;
     private javax.swing.JPanel btnRentDvd;
@@ -3111,10 +3274,10 @@ public class MovieRental extends javax.swing.JFrame {
     private javax.swing.JPanel pnlUpdateCustomerCredit;
     private javax.swing.JTable tblChooseMovieToRent;
     private javax.swing.JTable tblDisplayAllCustomers;
+    private javax.swing.JTable tblDisplayAllDailyRentals;
     private javax.swing.JTable tblDisplayAllMovies;
+    private javax.swing.JTable tblDisplayAllOutstandingRentals;
     private javax.swing.JTable tblDisplayAllRental;
-    private javax.swing.JTable tblDisplayAllRental1;
-    private javax.swing.JTable tblDisplayAllRental2;
     private javax.swing.JTable tblDisplaySearchedMovies;
     private javax.swing.JTextField txtAvailableCredit;
     private javax.swing.JTextField txtCredit;
@@ -3123,9 +3286,6 @@ public class MovieRental extends javax.swing.JFrame {
     private javax.swing.JTextField txtCustomerSurname;
     private javax.swing.JTextField txtDvdNumber;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtName1;
-    private javax.swing.JTextField txtName2;
-    private javax.swing.JTextField txtName3;
     private javax.swing.JTextField txtPhoneNumber;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtPriceAddition;
@@ -3137,8 +3297,11 @@ public class MovieRental extends javax.swing.JFrame {
     private javax.swing.JTextField txtReturnCustomerSurname;
     private javax.swing.JTextField txtReturnDate;
     private javax.swing.JTextField txtReturnFee;
+    private javax.swing.JTextField txtSearchMovie;
     private javax.swing.JTextField txtSurname;
     private javax.swing.JTextField txtTitle;
+    private javax.swing.JTextField txtTotalPenaltyCost;
+    private javax.swing.JTextField txtTotalPenaltyCostPerDay;
     private javax.swing.JTextField txtUpdateCredit;
     private javax.swing.JTextField txtUpdateCustomerNumber;
     private javax.swing.JTextField txtUpdateName;

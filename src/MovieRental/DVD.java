@@ -4,7 +4,7 @@ package MovieRental;
  * @Author  Tshepo Sepadile - 217029175
  */
 import java.io.*;
-public class DVD implements Serializable {
+public class DVD implements Serializable, Comparable<DVD> {
 
     private int dvdNumber;
     private String title;
@@ -104,6 +104,18 @@ public class DVD implements Serializable {
     //checks if the movie is available
     public boolean isAvailable() {
         return availableForRent;
+    }
+    
+    @Override
+    public int compareTo(DVD other) {
+        int compareInt = this.category.compareTo(other.category);
+        if (compareInt < 0) {
+            return -1;	//this.title is bigger
+        }
+        if (compareInt > 0) {
+            return 1;	//this.title is smaller
+        }
+        return 0;	//they are equal
     }
 
     //overrides the object method

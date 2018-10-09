@@ -4,8 +4,7 @@ package MovieRental;
  * @Author  Tshepo Sepadile - 217029175
  */
 import java.io.*;
-public class Customer implements Serializable
-{
+public class Customer implements Serializable,Comparable<Customer>{
     private int custNumber;
     private String firstName;
     private String surname;
@@ -85,6 +84,18 @@ public class Customer implements Serializable
     public double getCredit()
     {
         return credit;
+    }
+
+    @Override
+    public int compareTo(Customer other) {
+        int compareInt = this.getName().compareTo(other.getName());
+        if (compareInt < 0) {
+            return -1;	//this.title is bigger
+        }
+        if (compareInt > 0) {
+            return 1;	//this.title is smaller
+        }
+        return 0;	//they are equal
     }
     
     //this method can be edited to format strings differently

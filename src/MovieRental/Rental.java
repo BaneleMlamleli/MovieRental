@@ -5,8 +5,7 @@ package MovieRental;
  */
 import java.io.*;
 import java.util.*;
-public class Rental  implements Serializable
- {
+public class Rental  implements Serializable/*, Comparable<Rental>*/ {
     private int rentalNumber;
     private String dateRented;
     private String dateReturned;
@@ -130,6 +129,18 @@ public class Rental  implements Serializable
         else
             return days;
     }
+    
+//    @Override
+//    public int compareTo(Rental other) {
+//        String compareInt = this.getRentalNumber().compareTo(other.getRentalNumber());
+//        if (compareInt < 0) {
+//            return -1;	//this.title is bigger
+//        }
+//        if (compareInt > 0) {
+//            return 1;	//this.title is smaller
+//        }
+//        return 0;	//they are equal
+//    }
 
     public String toString() {
         return "Rental#:" + rentalNumber + "  Date Rented:" + dateRented + "   Date Returned:" + dateReturned + "\nPenalty cost per day:R" + PENALTY_COST_PER_DAY + "  Total Penalty Cost:R" +

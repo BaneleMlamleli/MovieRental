@@ -26,7 +26,7 @@ public class Database {
     //Establish connection to the databse using UCAnAccess
     public static void Connect() {
         try {
-            String dbURL = "jdbc:ucanaccess://F:\\MovieRental\\src\\Assets\\MovieDatabase.accdb";
+            String dbURL = "jdbc:ucanaccess:///home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental/src/Assets/MovieDatabase.accdb";
 //            String username = "";
 //            String password = "";
             String driverName = "net.ucanaccess.jdbc.UcanaccessDriver";
@@ -62,20 +62,20 @@ public class Database {
         }
     }
         
-    public static void createTables(Connection conn) {
+    public static void createTables() {
         try {
             //Creating tables
             System.out.println("Creating CUSTOMER table.");
             String create_table_cust = "create table CUSTOMER (custNumber INTEGER CONSTRAINT customer_custnum_pk PRIMARY KEY, "
                     + "firstName VARCHAR(50) CONSTRAINT customer_fName_nn NOT NULL, "
                     + "surname VARCHAR(50) CONSTRAINT customer_surname_nn NOT NULL, "
-                    + "phoneNum VARCHAR(20) CONSTRAINT customer_phoneNum_uk UNIQUE, " /*UNIQUE*/
+                    + "phoneNum VARCHAR(20) CONSTRAINT customer_phoneNum_uk UNIQUE, "
                     + "credit DOUBLE, "
                     + "Can_Rent VARCHAR(5) CONSTRAINT customer_can_rent_nn NOT NULL)";
             
             System.out.println("Creating DVD table.");
             String create_table_dvd = "create table DVD(dvdNumber INTEGER CONSTRAINT dvd_dvdNum_pk PRIMARY KEY, "
-                    + "title VARCHAR(50) CONSTRAINT dvd_title_uk UNIQUE, " /*UNIQUE*/
+                    + "title VARCHAR(50) CONSTRAINT dvd_title_uk UNIQUE, "
                     + "category VARCHAR(50) CONSTRAINT dvd_category_nn NOT NULL, "
                     + "price DOUBLE, "
                     + "New_Release VARCHAR(5) CONSTRAINT dvd_new_release_nn NOT NULL, "
@@ -107,7 +107,7 @@ public class Database {
     }
         
     //populate CUSTOMER table with data from serialized file
-    public static void insertCustomerData() {
+    public void insertCustomerData() {
         try {
             String insertDetails = "INSERT INTO CUSTOMER(custNumber, firstName, surname, phoneNum, credit, Can_Rent) VALUES(?, ?, ?, ?, ?, ?)";
             for(int a = 0; a < customerArraylist.size(); a++){
@@ -127,7 +127,7 @@ public class Database {
     }
     
     //populate DVD table with data from serialized file
-    public static void insertDvdData() {
+    public void insertDvdData() {
         try {
             String insertDetails = "INSERT INTO DVD(dvdNumber, title, category, price, New_Release, Available_For_Rental) VALUES(?, ?, ?, ?, ?, ?)";
             for(int a = 0; a < dvdArraylist.size(); a++){
@@ -147,7 +147,7 @@ public class Database {
     }
     
     //populate RENTAL table with data from serialized file
-    public static void insertRentalData() {
+    public void insertRentalData() {
         try {
             String insertDetails = "INSERT INTO RENTAL(rentalNumber, dateRented, dateReturned, custNumber, dvdNumber, totalPenaltyCost) VALUES(?, ?, ?, ?, ?, ?)";
             for(int a = 0; a < rentalArraylist.size(); a++){
@@ -167,7 +167,7 @@ public class Database {
     }
     
     //Selecting all the data about customer from the CUSTOMER table
-    public static void selectAllCustomers(){
+    public void selectAllCustomers(){
         try {
             stmnt = connect.createStatement();
             ResultSet allCustomers = stmnt.executeQuery("SELECT * FROM CUSTOMER");
@@ -182,7 +182,7 @@ public class Database {
     }
     
     //Selecting all the data about the movies from the DVD table
-    public static void selectAllMovies() {
+    public void selectAllMovies() {
         try {
             stmnt = connect.createStatement();
             ResultSet allMovies = stmnt.executeQuery("SELECT * FROM DVD");
@@ -207,7 +207,7 @@ public class Database {
     }
 
     //Selecting all the data about rentals from the RENTAL table
-    public static void selectAllRental() {
+    public void selectAllRental() {
         try {
             stmnt = connect.createStatement();
             ResultSet allRentals = stmnt.executeQuery("SELECT * FROM RENTAL");
@@ -225,7 +225,6 @@ public class Database {
     public void addCustomer(int custNumber, String firstName, String surname, String phoneNum, double credit, String Can_Rent) {
         try {
             String addCustomerDetails = "INSERT INTO CUSTOMER(custNumber, firstName, surname, phoneNum, credit, Can_Rent) VALUES(?, ?, ?, ?, ?, ?)";
-            for (int a = 0; a < customerArraylist.size(); a++) {
                 prepStmnt = connect.prepareStatement(addCustomerDetails);
                 prepStmnt.setInt(1, custNumber);
                 prepStmnt.setString(2, firstName);
@@ -234,11 +233,72 @@ public class Database {
                 prepStmnt.setDouble(5, credit);
                 prepStmnt.setString(6, Can_Rent);
                 prepStmnt.executeUpdate();
-            }
             JOptionPane.showMessageDialog(null, "Customer data has been recorded successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Customer data has been recorded successfully");
         } catch (HeadlessException | SQLException error) {
             JOptionPane.showMessageDialog(null, "Unable to insert new customer data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    //Adding new movie into the DVD table
+    public void addDvd(int dvdNumber, String title, String category, double price, String newRelease, String available) {
+        try {
+            String insertDvd = "INSERT INTO DVD(dvdNumber, title, category, price, New_Release, Available_For_Rental) VALUES(?, ?, ?, ?, ?, ?)";
+                prepStmnt = connect.prepareStatement(insertDvd);
+                prepStmnt.setInt(1, dvdNumber);
+                prepStmnt.setString(2, title);
+                prepStmnt.setString(3, category);
+                prepStmnt.setDouble(4, price);
+                prepStmnt.setString(5, newRelease);
+                prepStmnt.setString(6, available);
+                prepStmnt.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "Dvd data has been recorded successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Dvd data has been recorded successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to insert new Movie data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void rentMovieAndUpdateCustomerTable(int customerNm){
+        try {
+            String updateDetails = "UPDATE CUSTOMER SET Can_Rent = ? WHERE custNumber = ?";
+                prepStmnt = connect.prepareStatement(updateDetails);
+                prepStmnt.setInt(1, customerNm);
+                prepStmnt.setString(5, "false");
+                prepStmnt.executeUpdate();
+            System.out.println("Rental data has updated successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to update customer data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void rentMovieAndUpdateDvdTable(int rentedDvdNm){
+        try {
+            String updateDetails = "UPDATE DVD SET Available_For_Rental = ? WHERE dvdNumber = ?";
+            prepStmnt = connect.prepareStatement(updateDetails);
+            prepStmnt.setInt(1, rentedDvdNm);
+            prepStmnt.setString(6, "false");
+            prepStmnt.executeUpdate();
+            System.out.println("Dvd table has updated successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to update DVD data\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void insertRentedMovieIntoRentalTable(int rentalNumber, String dateRented, String dateReturned, int custN, int rentedDvdNum, double totPenaltyFee){
+        try {
+            String insertDetails = "INSERT INTO RENTAL(rentalNumber, dateRented, dateReturned, custNumber, dvdNumber, totalPenaltyCost) VALUES(?, ?, ?, ?, ?, ?)";
+                prepStmnt = connect.prepareStatement(insertDetails);
+                prepStmnt.setInt(1, rentalNumber);
+                prepStmnt.setString(2, dateRented);
+                prepStmnt.setString(3, dateReturned);
+                prepStmnt.setInt(4, custN);
+                prepStmnt.setInt(5, rentedDvdNum);
+                prepStmnt.setDouble(6, totPenaltyFee);
+                prepStmnt.executeUpdate();
+            System.out.println("Rental data has been recorded successfully");
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, "Unable to insert rental details in the Rental table\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
