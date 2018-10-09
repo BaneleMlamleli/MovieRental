@@ -5,6 +5,7 @@
  */
 package MovieRental;
 
+import static MovieRental.Database.connect;
 import java.awt.Color;
 import java.util.Calendar;
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class MovieRental extends javax.swing.JFrame {
         rf.readRentalSerializedData();  //reading Rental.ser and saving data in an arraylist
         Database.Connect();             //Establishing a datanase connection using UCanAccess driver
         Database.dropTables();          //Dropping the tables if they are created already
-        Database.createTables(); //Creating the database tables
+        Database.createTables(connect); //Creating the database tables
         db.insertCustomerData();        //Inserting data from arraylist into the Customer table
         db.insertDvdData();             //Inserting data from arraylist into the DVD table
         db.insertRentalData();          //Inserting data from arraylist into the Rental table

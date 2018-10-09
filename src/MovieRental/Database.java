@@ -26,7 +26,7 @@ public class Database {
     //Establish connection to the databse using UCAnAccess
     public static void Connect() {
         try {
-            String dbURL = "jdbc:ucanaccess:///home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental/src/Assets/MovieDatabase.accdb";
+            String dbURL = "jdbc:ucanaccess:///home/shaun/Documents/PROGRAMMING/Java/Projects/MovieRental1/src/Assets/MovieDatabase.accdb";
 //            String username = "";
 //            String password = "";
             String driverName = "net.ucanaccess.jdbc.UcanaccessDriver";
@@ -62,7 +62,7 @@ public class Database {
         }
     }
         
-    public static void createTables() {
+    public static void createTables(Connection connect) {
         try {
             //Creating tables
             System.out.println("Creating CUSTOMER table.");
