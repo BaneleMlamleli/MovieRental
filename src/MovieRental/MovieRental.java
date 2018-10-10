@@ -2887,7 +2887,7 @@ public class MovieRental extends javax.swing.JFrame {
         Calendar calendar1 = Calendar.getInstance();
         String dateRented = calendar.get(Calendar.YEAR)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.DATE);
         calendar1.add(Calendar.DATE, 1);
-        String dateReturned = calendar1.get(Calendar.YEAR)+"/"+calendar1.get(Calendar.MONTH)+"/"+calendar1.get(Calendar.DATE);
+        String dateReturned = "NA";//calendar1.get(Calendar.YEAR)+"/"+calendar1.get(Calendar.MONTH)+"/"+calendar1.get(Calendar.DATE);
         
         db.selectAllRental();
         int rentalNumber = Database.arrayListSelectAllRentals.get(Database.arrayListSelectAllRentals.size()-1).getRentalNumber();

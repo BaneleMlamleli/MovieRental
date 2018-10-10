@@ -266,7 +266,7 @@ public class Database {
         try {
             String updateDetails = "UPDATE CUSTOMER SET Can_Rent = ? WHERE custNumber = "+customerNm;
                 prepStmnt = connect.prepareStatement(updateDetails);
-                prepStmnt.setString(6, "false");
+                prepStmnt.setString(1, "false");
                 prepStmnt.executeUpdate();
             System.out.println("customer rental status has updated successfully");
         } catch (HeadlessException | SQLException error) {
@@ -278,7 +278,7 @@ public class Database {
         try {
             String updateDetails = "UPDATE DVD SET Available_For_Rental = ? WHERE dvdNumber = "+rentedDvdNm;
             prepStmnt = connect.prepareStatement(updateDetails);
-            prepStmnt.setString(6, "false");
+            prepStmnt.setString(1, "false");
             prepStmnt.executeUpdate();
             System.out.println("Dvd table has updated successfully");
         } catch (HeadlessException | SQLException error) {
